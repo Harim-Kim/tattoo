@@ -1,0 +1,41 @@
+
+<div class="center-block w-xxl w-auto-xs p-y-md text-center" style="margin-top:20px">
+  <div class="p-a-md" >
+   
+
+        <h1 >Edit Tattooshop</h1><br>
+    
+    <%= form_tag({controller: "tattooshops", action: "update"}, method: "post", multipart: true) do %>
+        <%=text_field_tag :user_id,"", type:"hidden", value:current_user.id %>
+        <%=text_field_tag :owner,"", type:"hidden", value:current_user.email %>
+        <div class="field">
+            <h5 style="float:left">Shop name</h5>
+            <%= text_field_tag :shopname,"", class:"form-control",  value: @tattooshop.shopname%>
+        </div>
+        <div class="field">
+            <h5 style="float:left">Phone Number</h5>
+            <%= text_field_tag :phonenumber,"", class:"form-control", value: @tattooshop.phonenumber%>
+        </div>
+        <div class="field">
+            <h5 style="float:left">Country</h5>
+            <%=text_field_tag :country,"", class:"form-control", value: @tattooshop.country%>
+        </div>
+        <div class="field">
+            <h5 style="float:left">City</h5>
+            <%= text_field_tag :city,"", class:"form-control", value: @tattooshop.city %>
+        </div>
+        <div class="field">
+            <h5 style="float:left">Suburb</h5>
+            <%= text_field_tag :suburb,"", class:"form-control", value: @tattooshop.suburb %>
+        </div>
+        <div class="field">
+            <h5 style="float:left">Street Address</h5>
+            <%= text_field_tag :address,"", class:"form-control", value: @tattooshop.address %>
+        </div><hr>
+        <p> 타투샵 기본 정보를 수정하셨으면 확인을 눌러주세요</p>
+        <div class="actions form-group">
+            <%=submit_tag "수정완료" , class:"btn btn-outline rounded  text-primary"%>
+        </div>
+    <% end %>
+  </div>
+</div>

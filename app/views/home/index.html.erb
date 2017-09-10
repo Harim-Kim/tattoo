@@ -1,0 +1,153 @@
+
+<div id="content" class="app-content" role="main">
+
+      
+    <div class="app-body">
+     
+        <div class="row-col">
+            <div class="col-lg-7 col-xs-12 col-sm-12 col-md-12 b-r no-border-md">
+                <%@shops.each do |s|%>
+                    <div class=" col-xs-6 col-sm-6 col-md-4 col-lg-4" >
+                      <a href="/tattooshop/<%=s.id%>">
+                    		<div class="box">
+                    			<div class="item dark tattooshopTile" id="tattooshopTile" data-tattooshop_id="<%=s.id%>">
+                    			      <%if s.shopmainimgs.exists?%>
+                    			      <%= image_tag s.shopmainimgs.last.image.url, class:"w-full tattooshopBox"%>
+                    			      <% else%>
+                    			      <%= image_tag "tatto.jpg", class:"w-full tattooshopBox"%>
+                    			      <%end%>
+                    			    <div class="top item-overlay text-right p-x-xs">
+                    			      <% if user_signed_in? %>
+                      			    	<% if current_user.is_likeshop?(s) %>
+                                    <a href="/like/likeshop/<%=s.id%>" class="btn-favorite"><i class="fa fa-heart  text-danger none" aria-hidden="true"></i></a>
+                                  <% else %>
+                                    <a href="/like/likeshop/<%=s.id%>" class="btn-favorite"><i class="fa fa-heart-o  text-danger none" aria-hidden="true"></i></a>
+                                  <% end %>
+                                <% end %>
+                    			    </div>
+                    			</div>
+                    			<div class="p-a" style="margin-top: -10px">
+                    			  <span class="text-muted pull-right" style="vertical-align: top;">도안<%= s.shopdesignimgs.count %> 작품<%= s.shoptattooimgs.count %> </span>
+                    				<div class="mx-auto h-1x"><a href="/tattooshop/<%=s.id%>" class="_800"><%=s.shopname%></a></div>
+                    				  
+                            <div class="text-muted m-b-xs">
+                    					<span class="m-r"><%= s.address %></span>
+                    					<!--<span class="m-r">도안 <%#= s.shopdesignimgs.count %></span>-->
+                    					<div class="pull-right">
+                    					<% if user_signed_in? %>
+                      			    	<% if current_user.is_likeshop?(s) %>
+                                    <a href="/like/likeshop/<%=s.id%>" class="btn-favorite"><i class="fa fa-heart  text-danger none" aria-hidden="true"></i> <%=s.shoplikes.size%></a>
+                                  <% else %>
+                                    <a href="/like/likeshop/<%=s.id%>" class="btn-favorite"><i class="fa fa-heart-o  text-danger none" aria-hidden="true"></i> <%=s.shoplikes.size%></a>
+                                  <% end %>
+                                <% end %>
+                    					<!--<a href="#" class="m-r"><i class="fa fa-heart-o"></i> <%#=#@one_shop.shoplikes.size%></a>-->
+                    					<a href="#">후기 <%= s.reviews.count %> </a>
+                    					</div>
+                    				</div>
+                    			</div>
+                    		</div>
+                		</a>
+
+                	</div>
+                <% end%>
+            </div>
+            <div class="col-lg-5 col-sm-0 col-xs-0 col-md-0 w-xxl w-auto-md">
+                <div class="col-xs-0 col-sm-0 col-lg-12 " style="padding:0;">
+                  <div class="box">
+                    <style>
+                       #map {
+                         height: 100%;
+                        width: 100%;
+                       }
+                    </style>
+                    
+                    <div class="box-body" style="padding:0;height:600px">
+                      <div id="map" ></div>
+                      <script>
+                        const currentShopData = JSON.parse(`<%= @maplocation%>`);
+                        const markerArray = new Array;
+                        function ensureItemIsHighlighted(itemId) {
+                          // 다른 모든 하이라이트를 제거
+                          // 선택된 아이디의 아이템을 하이라이트
+                          // 만약 아이템 아이디 없으면 모두 제거만 하기..
+                        }
+                      
+                        function initMap() {
+                          var seoul = {lat: 37, lng: 126};
+                          var map = new google.maps.Map(document.getElementById('map'), {
+                            zoom: 2,
+                            center: seoul
+                          });
+                          var marker, i;
+                          var markerImage = "<%=asset_path "makerT.png"%>";
+                          for (i = 0; i < currentShopData.length; i++) {  
+                            marker = new google.maps.Marker({
+                              position: new google.maps.LatLng(currentShopData[i][1], currentShopData[i][2]),
+                              title: currentShopData[i][0],
+                              map: map
+                              
+                            });
+                            markerArray[i]=marker;
+                            attachSecretMessage(marker, "샵 이름: "+marker.title+"\n 상세주소: "+currentShopData[i][3]);
+                          }
+                          marker.addListener('click', function() {
+                            map.setZoom(15);
+                            map.setCenter(marker.getPosition());
+                            
+                          });
+                          $('.tattooshopTile')
+                          .on('mouseover', function(e) {
+                            const id = e.currentTarget.getAttribute('data-tattooshop_id');
+                            map.setZoom(15);
+                            map.setCenter(markerArray[id-1].getPosition());
+                            
+                            ensureItemIsHighlighted(id);
+                            
+                          })
+                          .on('mouseout', function(e) {
+                            const id = e.currentTarget.getAttribute('data-tattooshop_id');
+                            map.setZoom(2)
+                            map.setCenter(markerArray[id-1].getPosition())
+                            ensureItemIsHighlighted();
+                          })
+                          
+                        }
+                        function attachSecretMessage(marker, secretMessage) {
+                          var infowindow = new google.maps.InfoWindow({
+                            content: secretMessage
+                          });
+                        
+                          marker.addListener('click', function() {
+                            infowindow.open(marker.get('map'), marker);
+                          });
+                        }
+                        
+                        
+                      </script>
+                      <script async defer
+                      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCMcjD65GJ6wIiBR-07CsQbB19pdGSk5PY&callback=initMap">
+                      </script>
+                    </div>
+                  </div>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+  var cw = $('.tattooshopBox').width();
+  
+  var vh = $('.navbar').height();
+  var wh = $(window).height();
+  var forMap = $('.bottom-nav').height+vh;
+  
+  $('.tattooshopBox').css({'height':(cw*0.618)+'px'});
+  $('.bottom-nav').css({'margin-top':vh+'px'});
+</script>
+
+<div class="pagination">
+  <%= paginate @shops, remote:true %>
+</div>

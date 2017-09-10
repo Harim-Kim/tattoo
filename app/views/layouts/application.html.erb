@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>TattooPeople</title>
+  <%= stylesheet_link_tag    'application', media: 'all' %>
+  <script src="https://use.fontawesome.com/007987421c.js"></script>
+  <%= csrf_meta_tags %>
+  <%= javascript_include_tag 'app'%>
+
+</head>
+<body class="">
+
+<div class="app-header navbar-md black box-shadow-z1">
+  <div class="navbar" data-pjax>
+    <div class="row">
+      <a data-toggle="collapse" data-target="#navbar" class="navbar-item pull-right hidden-md-up m-r-0 m-l">
+        <i class="material-icons">menu</i>
+      </a>
+      <!-- brand -->
+      <a href="/home/index" class="navbar-brand md col-sm-3 col-xs-3 col-lg-1">
+      	<span class="hidden-folded inline">TattooPeople</span>
+      </a>
+      <%= form_tag({controller: "/home", action: "search"}, method: "get", class:"col-lg-7 col-xs-7 col-sm-7 search-form") do %>
+        <div class="input-group input-group-sm">
+          <%= text_field_tag :search, "", class: 'form-control',placeholder:"type Keyword"  %>
+          <span class="input-group-btn">
+            <%= submit_tag("Search", :class=>"btn b-a no-shadow white") %>
+          </span>
+        </div>
+      <% end %>
+      <!--<div class="nav navbar-nav ">-->
+      <!--</div>-->
+      <div class="collapse navbar-toggleable-sm l-h-0 text-center col-sm-2 col-xs-2 col-lg-3 pull-right" id="navbar" style="width:inherit">
+        <ul class="nav navbar-nav nav-md inline text-primary-hover pull-right">
+          <li class="nav-item">
+            <a href="/member/picture" class="nav-link">
+              <span class="nav-text">마이페이지</span>
+            </a>
+          </li>            
+          <li class="nav-item">
+            <a href="/member/message" class="nav-link">
+              <span class="nav-text">메세지</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/member/wishlist" class="nav-link">
+              <span class="nav-text">위시리스트</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/member/help" class="nav-link">
+              <span class="nav-text">도움말</span>
+            </a>
+          </li>
+          <% if user_signed_in?%>
+          <li class="nav-item dropdown" style="margin:0">
+            <a href="/" class="navbar-brand md col-sm-3 col-xs-3 col-lg-1" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            	<%= image_tag current_user.image.url, class:"profile-img-nav" %>
+            	
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" style="left:-50px">
+              <% if current_user.is_tattooist and current_user.tattooshops.empty? %>
+              <a class="dropdown-item" href="/tattooshops/new">타투샵 만들기</a>
+              <%end%>
+              <% if current_user.is_tattooist %>
+              <a class="dropdown-item" href="/tattooshops/new">예약 관리하기</a>
+              <%end%>
+              <a class="dropdown-item" href="">개인 페이지</a>
+              <%= link_to "회원정보 수정", edit_user_registration_path,class:"dropdown-item"  %>
+              <a class="dropdown-item" href="/users/sign_out">로그아웃</a>
+            </div>
+          </li>
+            
+          <% else %>
+          <li class="nav-item">
+            <div class="btn-group dropdown" style="margin-top:10px">
+              <button class="btn white" data-toggle="modal" data-target="#m-sm">Sign in</button>
+            </div>
+          </li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+    
+    
+    <!-- / navbar right -->
+  </div>
+</div>
+<!-- small modal -->
+<div id="m-sm" class="modal" data-backdrop="true">
+  <div class="row-col h-v">
+    <div class="row-cell v-m">
+      <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+          <div class="modal-header">
+          	<span class="modal-title">Sign In</span>
+          	<a style="text-align:right" type="button"  data-dismiss="modal">x</a>
+          </div>
+          <div class="modal-body text-center p-lg">
+            <div class="p-a-md sign_in_nav" >
+              <div>
+                <a href="#" class="btn btn-block indigo text-white m-b-sm">
+                  <i class="fa fa-facebook pull-left"></i>
+                  Sign in with Facebook
+                </a>
+                <a href="#" class="btn btn-block red text-white">
+                  <i class="fa fa-google-plus pull-left"></i>
+                  Sign in with Google+
+                </a>
+              </div>
+              <div class="m-y text-sm">
+                OR
+              </div>
+              <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+                <div class="field">
+                  <h5 style="float:left;">Email</h5>
+                  <%= f.email_field :email, autofocus: true,class: "form-control" %>
+                </div>
+              
+                <div class="field">
+                  <h5 style="float:left;">Password</h5>
+                  <%= f.password_field :password, autocomplete: "off",class: "form-control" %>
+                </div>
+                <div class="actions form-group">
+                  <%= f.submit "Sign in" , class:"btn btn-outline rounded  text-primary"%>
+                </div>
+              <% end %>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <div style="text-align:left;">
+              아직 회원이 아니신가요?
+              <a  class="btn btn-outline rounded  text-primary" href="/users/sign_up">회원가입</a>
+            </div>
+          </div>
+        </div><!-- /.modal-content -->
+      </div>
+    </div>
+  </div>
+</div>
+<!-- / .modal -->
+
+<div class="app dk" id="app">
+  <%= yield %>
+</div>
+    <%= javascript_include_tag 'application'%>
+<script>
+  var cw = $('.tattooshopBox').width();
+  var wh = $(window).height();
+  $('.tattooshopBox').css({'height':(cw*0.618)+'px'});
+  $('.box-body').css({'height': wh+'px'});
+</script>
+</body>
+</html>

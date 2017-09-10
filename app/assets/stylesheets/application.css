@@ -1,0 +1,143 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+ * or any plugin's vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any styles
+ * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
+ * file per style scope.
+ *
+ *= require_tree .
+ *= require_self
+ *= require fullcalendar
+ */
+@import 'template/bootstrap.css';
+@import 'template/animate.min.css';
+@import 'template/glyphicons.css';
+@import 'template/material-design-icons.css';
+@import 'template/app.css';
+@import 'template/style.css';
+@import 'template/font.css';
+@import 'template/owl.carousel.css';
+@import 'template/owl.theme.css';
+@import 'template/mediaelementplayer.min.css';
+@import 'template/mep.css';
+@import 'template/font-awesome.css';
+@import 'template/primary.css';
+
+.field>h5{
+    padding-left:5px;
+    /*color:white;*/
+}
+.field > select{
+    color:black;
+}
+.tapeo{
+    background-color:#fcc100;
+}
+
+#sticky {
+    padding: 0.5ex;
+    color: #fff;
+    font-size: 2em;
+}
+
+#sticky.stick {
+    margin-top: 0 !important;
+    position: fixed;
+    top: 0;
+    z-index: 10000;
+}
+.app-body{
+    padding-left:15px;
+    padding-right: 15px;
+    margin-top:60px;
+}
+.sign_in_nav_box{
+    width:250px;
+    padding:0;
+    background-color: black;
+    color: white;
+    box-shadow:0px 4px 18px #6a6464;
+}
+.sign_in_nav{
+    width:95%;
+    margin:auto;
+    padding-left:0;
+    padding-right:0;
+    padding-bottom:0;
+}
+.sign_in_nav_box_in{
+    width:250px;
+    padding:0;
+    background-color: black;
+    color: white;
+}
+.index_shop{
+    width:100%;
+}
+.navbar{
+    position:relative;
+}
+.search_form{
+    position:relative;
+    width:50%;
+    margin:auto;
+}
+.search_form>div{
+    padding-top:10px;
+}
+.shop-main-imgs{
+    height:450px !important;
+}
+
+.greeting-content >p,h1,h2,h3,h4,h5{
+}    
+.tattoo_large{
+    width:100%;
+}
+.search-form{
+    padding-top:13px;
+}
+
+.pro{
+    width:115px;
+}
+.shop-tattooist{
+    margin:5px;
+}
+.tattooist_detail{
+    position:absolute;
+    bottom:10%;
+    right:3%;
+}
+.shop-profile{
+    position:relative;
+}
+.reserve{
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+.profile-img{
+    width:7%;
+}
+.profile-img-nav{
+    width:40px;
+    height:40px;
+    border-radius: 500px;
+}
+.tattooshopBox{
+    height:auto;
+    max-height:300px;
+    min-height: 100px;
+}
+.follow-btn{
+    position: absolute;
+    right: 15px;
+}
+.pagination{
+    text-align: center;
+}

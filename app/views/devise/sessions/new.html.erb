@@ -1,0 +1,36 @@
+<h2>Log in</h2>
+<div class="center-block w-xxl w-auto-xs p-y-md text-center" style="margin-top:20px">
+  <div class="p-a-md" >
+        <h3 style="color:black">회원 정보가 없습니다</h3><br>
+        <h2>Sign in</h2><br>
+
+    <div>
+      <a href="#" class="btn btn-block indigo text-white m-b-sm">
+        <i class="fa fa-facebook pull-left"></i>
+        Sign in with Facebook
+      </a>
+      <a href="#" class="btn btn-block red text-white">
+        <i class="fa fa-google-plus pull-left"></i>
+        Sign in with Google+
+      </a>
+    </div>
+    <div class="m-y text-sm">
+      OR
+    </div>
+    <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+      <div class="field">
+        <h5 style="float:left;">Email</h5>
+        <%= f.email_field :email, autofocus: true,class: "form-control" %>
+      </div>
+    
+      <div class="field">
+        <h5 style="float:left;">Password</h5>
+        <%= f.password_field :password, autocomplete: "off",class: "form-control" %>
+      </div>
+      <div class="actions form-group">
+        <%= f.submit "Sign in" , class:"btn btn-outline rounded  text-primary"%>
+      </div>
+    <% end %>
+<%= render "devise/shared/links" %>
+  </div>
+</div>

@@ -1,0 +1,80 @@
+<div>
+  <div class="row m-b" style="margin-left:30px;margin-top:80px;">
+    <h3 class="pull-left"> 위시리스트 한눈에 보기</h3><br><br><hr>
+            <h5 class="m-b">위시리스트에 담은 타투샵</h5>
+        <%@likeshops.each do |d|%>
+        <div class="col-xs-4 col-sm-4 col-md-2">
+        	<div class="item r" data-id="item-9" data-src="http://api.soundcloud.com/tracks/264094434/stream?client_id=a10d44d431ad52868f1bce6d36f5234c">
+    			<div class="item-media ">
+    				<a href="/tattooshop/<%=d.id%>" class="item-media-content" style="background-image: url('<%=asset_path d.shopmainimgs.last.image.url%>');"></a>
+    			</div>
+    			<div class="item-info">
+    				<!--<div class="item-overlay bottom text-right">-->
+    				<!--	<a href="#" class="btn-favorite"><i class="fa fa-heart-o"></i></a>-->
+    				<!--	<a href="#" class="btn-more" data-toggle="dropdown"><i class="fa fa-ellipsis-h"></i></a>-->
+    				<!--	<div class="dropdown-menu pull-right black lt"></div>-->
+    				<!--</div>-->
+    				
+    				<div class="item-title text-ellipsis" style="margin-top: -10px">
+              <span class="item-meta text-sm text-muted pull-right" style="vertical-align: top;">도안<%= d.shopdesignimgs.count %> 작품<%= d.shoptattooimgs.count %> </span>    				
+    					<a href="track.detail.html"><%=d.shopname%></a>
+    				</div>
+   				<div class="item-meta text-sm text-muted pull-right">
+              <span class="item-meta-stats text-xs">
+              	<i class="fa fa-heart m-l-sm text-muted"></i> <%=d.shoplikes.size %> 
+	           	<span>후기 <%=d.reviews.count %></span>
+	          </span>
+	        </div>
+    				<div class="item-author text-sm text-ellipsis">
+    					<a href="artist.detail.html" class="text-muted"><%=d.address %></a>
+    				</div>
+
+    
+    
+    			</div>
+    		</div>
+    	</div>
+        <%end%>
+    	
+  </div>
+<a href="#" class="btn btn-sm white rounded"style="margin-left:50px;">Show More</a>
+</div>
+
+<div>
+  <div class="row m-b" style="margin-left:30px;margin-top:80px;">
+        <h5 class="m-b">위시리스트에 담은 타투도안</h5>
+        <%@likedesigns.each do |s|%>
+        <div class="col-xs-4 col-sm-4 col-md-2">
+        	<div class="item r" data-id="item-9" data-src="http://api.soundcloud.com/tracks/264094434/stream?client_id=a10d44d431ad52868f1bce6d36f5234c">
+    			<div class="item-media ">
+    				<a href="/tattooshop/<%=s.id%>" class="item-media-content" style="background-image: url('<%=asset_path s.image.url%>');"></a>
+    			</div>
+    			<div class="item-info">
+    				<div class="item-overlay bottom text-right">
+    					<a href="#" class="btn-favorite"><i class="fa fa-heart-o"></i></a>
+    					<a href="#" class="btn-more" data-toggle="dropdown"><i class="fa fa-ellipsis-h"></i></a>
+    					<div class="dropdown-menu pull-right black lt"></div>
+    				</div>
+    				<div class="item-meta text-sm text-muted pull-right">
+		          <span class="item-meta-stats text-xs ">
+		          	<i class="fa fa-heart m-l-sm text-muted"></i> <%=s.designlikes.size %> 
+		          	<span>후기 <%=s.shopdesigncomments.count %></span> 
+		          </span>
+		        </div>
+    				<div class="item-title text-ellipsis">
+    					<a href="track.detail.html"><%=s.title%></a>
+    				</div>
+    				
+    				<div class="item-author text-sm text-ellipsis">
+    					<a href="artist.detail.html" class="text-muted"><%=s.designer%></a>
+    				</div>
+    				
+    
+    
+    			</div>
+    		</div>
+    	</div>
+        <%end%>
+  </div>
+<a href="#" class="btn btn-sm white rounded"style="margin-left:50px;">Show More</a>
+</div>  

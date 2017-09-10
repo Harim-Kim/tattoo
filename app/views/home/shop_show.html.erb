@@ -1,0 +1,990 @@
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="/resources/demos/style.css">
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script>
+  $( function() {
+    $( "#datepicker" ).datepicker();
+  } );
+  </script>
+<div class="owl-carousel owl-theme owl-dots-bottom-center" data-ui-jp="owlCarousel" data-ui-options="{
+             items: 1
+            ,loop: true
+            ,autoplay: true
+            ,nav: true
+          }" style="height:500px;width:full;margin-top:60px">
+	<%if @one_shop.shopmainimgs.exists?%>
+		<% @one_shop.shopmainimgs.each do |m|%>
+		<div class="row-col">
+			<div class="col-lg-2"></div>
+			<div class="col-lg-8 text-center">
+				<div class="p-a-lg">
+				  <%= image_tag m.image.url, class:"shop-main-imgs"%>
+				</div>
+			</div>
+			<div class="col-lg-2"></div>
+		</div>
+		<%end%>
+	<%else%>
+		<div class="row-col">
+			<div class="col-lg-2"></div>
+			<div class="col-lg-8 text-center">
+				<div class="p-a-lg">
+				  <%= image_tag "tatto.jpg", class:"shop-main-imgs"%>
+				</div>
+			</div>
+			<div class="col-lg-2"></div>
+		</div>
+	<%end%>
+</div>
+<!--주인장 들어오면 (타투샵을 만든사람이 들어오면 메인사진 올릴 수 있게 하는 것-->
+    <% if @ts.include?(current_user)%>
+      <div class="btn-group dropdown" style="margin-top:10px">
+        <button class="btn white" data-toggle="modal" data-target="#main">메인사진 업로드</button>
+      </div>
+      <div class="btn-group dropdown" style="margin-top:10px">
+        <button class="btn white" data-toggle="modal" data-target="#design">도안사진 업로드</button>
+      </div>
+      <div class="btn-group dropdown" style="margin-top:10px">
+        <button class="btn white" data-toggle="modal" data-target="#shop">매장사진 업로드</button>
+      </div>
+      <div class="btn-group dropdown" style="margin-top:10px">
+        <button class="btn white" data-toggle="modal" data-target="#tattoo">작품사진 업로드</button>
+      </div>
+      <% if current_user.email == @one_shop.owner %>
+      <div class="btn-group dropdown" style="margin-top:10px">
+        <button class="btn white" data-toggle="modal" data-target="#coworker">동업자 추가하기</button>
+      </div>
+      <% end %>
+      <% unless @one_shop.greetings.exists?%>
+      <div class="btn-group dropdown" style="margin-top:10px">
+        <button class="btn white" data-toggle="modal" data-target="#greeting">개요 업로드</button>
+      </div>
+      <% end %>
+    <div id="main" class="modal" data-backdrop="true">
+      <div class="row-col h-v">
+        <div class="row-cell v-m">
+          <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+              <div class="modal-header">
+              	<span class="modal-title">메인 사진 업로드</span>
+              	<!--<a style="text-align:right" type="button"  data-dismiss="modal">x</a>-->
+              </div>
+              <div class="modal-body  p-lg">
+                <div class="p-a-md sign_in_nav" >
+                    <%= form_tag({controller: "images", action: "main_image"}, method: "post", multipart: true) do %>
+                      <%= label_tag(:image, "메인사진") %>
+                      <%= file_field_tag(:image) %>
+                      <%= hidden_field_tag(:tattooshop_id, "#{@one_shop.id}") %>
+                      <div class="modal-footer">
+                        <button type="button" class="btn dark-white p-x-md pull-left" data-dismiss="modal">나가기</button>
+                        <%= submit_tag "업로드", class: "btn primary p-x-md" %>
+                      </div>
+                    <% end %>  
+                </div>
+              </div>
+            </div><!-- /.modal-content -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="coworker" class="modal" data-backdrop="true" style="margin-top:60px">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+          	<h5 class="modal-title">동업자</h5>
+          </div>
+          <div class="modal-body text-center p-lg">
+            <div class="row">
+              <div class="col-sm-6">
+                <h4>Full authority</h4>
+                <%= form_tag({controller: "images", action: "fullmanages"}, method: "post") do %>
+                  <%= label_tag(:user_id, "Full manager email") %>
+                  <%= text_field_tag(:user_id) %> <br />
+                  <%= hidden_field_tag(:tattooshop_id, "#{@one_shop.id}") %>
+                  <%= submit_tag("Submit") %>
+                <% end %>
+              </div>
+              <div class="col-sm-6">
+                <h4>Limited authority</h4>
+                <%= form_tag({controller: "images", action: "limited"}, method: "post") do %>
+                  <%= label_tag(:user_id, "Limited manager email") %>
+                  <%= text_field_tag(:user_id) %> <br />
+                  <%= hidden_field_tag(:tattooshop_id, "#{@one_shop.id}") %>
+                  <%= submit_tag("Submit") %>
+                <% end %>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">나가기</button>
+            <!--<button type="button" class="btn danger p-x-md" data-dismiss="modal">나가기</button>-->
+          </div>
+        </div><!-- /.modal-content -->
+      </div>
+    </div>
+    <div id="design" class="modal" data-backdrop="true">
+      <div class="row-col h-v">
+        <div class="row-cell v-m">
+          <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+              <div class="modal-header">
+              	<span class="modal-title">도안 사진 업로드</span>
+              </div>
+              <div class="modal-body  p-lg">
+                <div class="p-a-md sign_in_nav" >
+                     <%= form_tag({controller: "images", action: "design_image"}, method: "post", multipart: true) do %>
+                      <%= label_tag(:image, "도안사진") %>
+                      <%= file_field_tag(:image,style:"width:70%") %>
+                      <%= label_tag(:title, "도안 제목") %>
+                      <%= text_field_tag(:title) %> <br />
+                      <%= label_tag(:designer,"타투이스트")%>
+                      <%= select_tag(:designer, options_for_select(@shop_tattooist)) %> <br />
+                      <%= label_tag(:timespan, "도안 예상소요시간") %> <span>(분)</span>
+                      <%= text_field_tag(:timespan,"",style:"width:105px") %> <br />
+                      <%= label_tag(:description, "도안 설명") %>
+                      <%= text_area_tag(:description,"",rows:"8",style:"width:100%") %> <br />
+                      <%= label_tag(:price, "도안 가격") %> <span>(원)</span>
+                      <%= text_field_tag(:price) %> <br />
+                      <%= hidden_field_tag(:tattooshop_id, "#{@one_shop.id}") %>
+                      <div class="modal-footer">
+                        <button type="button" class="btn dark-white p-x-md pull-left" data-dismiss="modal">나가기</button>
+                        <%= submit_tag "업로드", class: "btn dark-white p-x-md" %>
+                      </div>
+                    <% end %>  
+                </div>
+              </div>                      
+            </div><!-- /.modal-content -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="shop" class="modal" data-backdrop="true">
+      <div class="row-col h-v">
+        <div class="row-cell v-m">
+          <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+              <div class="modal-header">
+              	<span class="modal-title">매장 사진 업로드</span>
+              </div>
+              <div class="modal-body  p-lg">
+                <div class="p-a-md sign_in_nav" >
+                    <%= form_tag({controller: "images", action: "shop_image"}, method: "post", multipart: true) do %>
+                      <%= label_tag(:image, "매장사진") %>
+                      <%= file_field_tag(:image) %> <br />
+                      <%= label_tag(:title, "사진 제목") %>
+                      <%= text_field_tag(:title) %> <br />
+                      <%= hidden_field_tag(:tattooshop_id, "#{@one_shop.id}") %>
+                      <div class="modal-footer">
+                        <button type="button" class="btn dark-white p-x-md pull-left" data-dismiss="modal">나가기</button>
+                        <%= submit_tag "업로드", class: "btn dark-white p-x-md" %>
+                      </div>
+                        <% end %>                      
+                </div>
+              </div>                      
+            </div><!-- /.modal-content -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="tattoo" class="modal" data-backdrop="true">
+      <div class="row-col h-v">
+        <div class="row-cell v-m">
+          <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+              <div class="modal-header">
+              	<span class="modal-title">작품 사진 업로드</span>
+              </div>
+              <div class="modal-body  p-lg">
+                <div class="p-a-md sign_in_nav" >
+                    <%= form_tag({controller: "images", action: "tattoo_image"}, method: "post", multipart: true) do %>
+                      <%= label_tag(:image, "작품사진") %>
+                      <%= file_field_tag(:image) %>
+                      <%= label_tag(:title, "작품 제목") %>
+                      <%= text_field_tag(:title) %> <br />
+                      <%= label_tag(:designer,"타투이스트")%>
+                      <%= select_tag(:designer, options_for_select(@shop_tattooist)) %> <br />
+                      <%= label_tag(:description, "작품 설명") %>
+                      <%= text_field_tag(:description) %> <br />
+                      <%= hidden_field_tag(:tattooshop_id, "#{@one_shop.id}") %>
+                      <div class="modal-footer">
+                        <button type="button" class="btn dark-white p-x-md pull-left" data-dismiss="modal">나가기</button>
+                        <%= submit_tag "업로드", class: "btn dark-white p-x-md" %>
+                      </div>
+                      <% end %>  
+                </div>
+              </div>                      
+            </div><!-- /.modal-content -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="greeting" class="modal" data-backdrop="true">
+      <div class="row-col h-v">
+        <div class="row-cell v-m">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+              	<span class="modal-title">개요 업로드</span>
+              </div>
+              <div class="modal-body  p-lg">
+                <div class="p-a-md sign_in_nav" >
+                    <%= form_tag({controller: "images", action: "greeting"}, method: "post", multipart: true) do %>
+                      <%= tinymce %>
+                      <%= label_tag(:openhour, "오픈 시간") %>
+                      <%= text_field_tag(:openhour) %>
+                      <%= label_tag(:hourlyprice, "타투이스트별 시간당 가격") %>
+                      <%= text_field_tag(:hourlyprice) %>
+                      <%= text_area_tag :content, "타투샵에 대한 소개내용, 인사말을 기재해주세요", :class => "tinymce", :rows => 20, :cols => 120 %>
+                      <%= hidden_field_tag(:tattooshop_id, "#{@one_shop.id}") %>
+                        <button type="button" class="btn dark-white p-x-md pull-left" data-dismiss="modal">나가기</button>
+                        <%= submit_tag "업로드", class: "btn dark-white p-x-md" %>
+                  </div>
+                        <% end %>
+                </div>
+              </div>                  
+            </div><!-- /.modal-content -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="logo" class="modal" data-backdrop="true">
+      <div class="row-col h-v">
+        <div class="row-cell v-m">
+          <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+              <div class="modal-header">
+              	<span class="modal-title">로고 업로드</span>
+              	
+              </div>
+              <div class="modal-body  p-lg">
+                <div class="p-a-md sign_in_nav" >
+                    <%= form_tag({controller: "images", action: "profile"}, method: "post", multipart: true) do %>
+                      <%= label_tag(:image, "로고사진") %>
+                      <%= file_field_tag(:image) %>
+                      <%= hidden_field_tag(:tattooshop_id, "#{@one_shop.id}") %>
+                      <div class="modal-footer">
+                        <button type="button" class="btn dark-white p-x-md pull-left" data-dismiss="modal">나가기</button>
+                        <%= submit_tag "업로드", class: "btn dark-white p-x-md" %>
+                      </div>
+                        <% end %>
+                </div>
+              </div>                      
+            </div><!-- /.modal-content -->
+          </div>
+        </div>
+      </div>
+    </div>  
+    <% end%>
+    <!--/메인사진 업로드-->
+<div class="page-content">
+<!--메인 사진 바로 아래-->
+  <div class="padding b-b shop-profile">
+    <div class="row-col">
+        <div class="col-sm w w-auto-xs m-b">
+          <div class="item w rounded">
+            <div class="item-media">
+              <div class="item-media-content" style="background-image: url('<%= asset_path @one_shop.profile_img.url%>');"></div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm">
+          <div class="p-l-md no-padding-xs">
+            <h1 class="page-title">
+              <span class="h1 _800"><%=@one_shop.shopname%></span>
+            </h1>
+            <p class="item-desc text-ellipsis text-muted" data-ui-toggle-class="text-ellipsis"><%= @one_shop.country %>,<%= @one_shop.city %>,<%= @one_shop.suburb %>,<%= @one_shop.address %> <p>
+          <% if @ts.include?(current_user) %>
+            <div class="item-action m-b">
+              <a class="btn btn-sm rounded primary" data-toggle="modal" data-target="#logo">Upload</a>
+              <a href="/tattooshops/edit/<%=@one_shop.id%>" class="btn btn-sm rounded white">Edit Profile</a>
+              <a href="/tattooshops/destroy/<%=@one_shop.id%>" class="btn btn-sm rounded white" onclick="return confirm('정말 타투샵 포스트를 삭제하실건가요?')"  >Delete</a>
+            </div>
+            <% else %>
+            <p class="item-desc text-ellipsis text-muted" data-ui-toggle-class="text-ellipsis">
+                소속 타투이스트 : 
+                <% @ts.each do |t|%> 
+                  <span> </span><%= t.nick_name %>
+                <% end %>
+              <p>
+           <% end %>  
+            
+            <div class="block clearfix m-b">
+              <span><%= @one_shop.shopdesignimgs.count %></span> <span class="text-muted">도안</span>, <span><%= @one_shop.shoptattooimgs.count %></span> <span class="text-muted">작품</span>, <span><%= @one_shop.reviews.count %> </span> <span class="text-muted">후기</span>
+            </div>
+            <% if current_user.is_likeshop?(@one_shop) %>
+              <a href="/like/likeshop/<%=@one_shop.id%>" class="btn-favorite"><i class="fa fa-heart  text-danger none" aria-hidden="true"></i></a>
+            <% else %>
+              <a href="/like/likeshop/<%=@one_shop.id%>" class="btn-favorite"><i class="fa fa-heart-o  text-danger none" aria-hidden="true"></i></a>
+            <% end %>
+            <%=@one_shop.shoplikes.size%>명의 사용자가 타투샵을 좋아합니다.
+          </div>
+        </div>
+
+        <a href="#" data-toggle="tab" data-target="#shop_tattooist" class="tattooist_detail">타투이스트 더보기</a>
+        <% @ts.first(3).each do |ts|%>
+          <div class="col-sm pro w-auto-xs m-b">
+            <div class="item pro  rounded tattooist-profile">
+              <div class="item-media shop-tattooist">
+                <div class="item-media-content" style="background-image: url('<%= asset_path ts.image.url%>');"></div>
+              </div>
+            </div>
+          </div>
+        <% end %>
+
+        
+    </div>
+  </div>
+<!--/메인 사진 바로 아래-->
+  <div class="row-col">
+    <div class="col-lg-9 b-r no-border-md">
+      <div class="padding p-y-0 m-b-md">
+        <div class="nav-active-border b-primary bottom m-b-md m-t">
+          <ul class="nav l-h-2x" data-ui-jp="taburl">
+            <li class="nav-item m-r inline">
+              <a class="nav-link active" href="#" data-toggle="tab" data-target="#outline">개요</a>
+            </li>
+            <li class="nav-item m-r inline">
+              <a class="nav-link" href="#" data-toggle="tab" data-target="#review">후기</a>
+            </li>
+            <li class="nav-item m-r inline">
+              <a class="nav-link" href="#" data-toggle="tab" data-target="#shop_tattooist">샵 & 타투이스트</a>
+            </li>
+            <li class="nav-item m-r inline">
+              <a class="nav-link" href="#" data-toggle="tab" data-target="#tattoos">작품보기</a>
+            </li>
+            <li class="nav-item m-r inline">
+              <a class="nav-link" href="#" data-toggle="tab" data-target="#reservation">예약상황</a>
+            </li>
+          </ul>
+        </div>
+        <div class="tab-content">
+          
+          <div class="tab-pane active" id="outline">
+            <div class="greeting-content" style="width:100%; border:1px; ">
+              <%if @one_shop.greetings.exists?%>
+                <h6>오픈시간 : <%= @one_shop.greetings.last.openhour %></h6>
+                <h6>시간별 가격 : <%= @one_shop.greetings.last.hourlyprice %></h6><br/>
+                <%= @one_shop.greetings.last.content.html_safe %>
+              <% else %>
+                개요를 작성해주세요
+              <% end %>
+            </div>
+            <hr>
+            <div class="row item-list  m-b">
+              <% @one_shop.shopdesignimgs.each do |d|%>
+                <div class="col-xs-12 col-lg-6">
+                  <div class="item r" data-id="item-12" data-src="http://api.soundcloud.com/tracks/174495152/stream?client_id=a10d44d431ad52868f1bce6d36f5234c">
+                    <div class="item-media ">
+                      <a class="item-media-content" data-toggle="modal" data-target="#onedesign<%=d.id%>" style="background-image: url('<%= asset_path d.image.url%>');"></a>
+                    </div>
+                    <div class="item-info">
+                      <div class="item-overlay bottom text-right">
+                        <% if current_user.is_likedesign?(d) %>
+                          <a href="/like/likedesign/<%=d.id%>" class="btn-favorite"><i class="fa fa-heart" aria-hidden="true"></i></a>
+                        <% else %>
+                          <a href="/like/likedesign/<%=d.id%>" class="btn-favorite"><i class="fa fa-heart-o" aria-hidden="true"></i></a>
+                        <% end %>
+                        <%=d.designlikes.size %>
+                        <a href="#">댓글 <%= d.shopdesigncomments.count %> </a>
+                        <% if @ts.include?(current_user)%>
+                        <a href="#" class="btn-more" data-toggle="dropdown"><i class="fa fa-ellipsis-h"></i></a>
+                        <div class="dropdown-menu pull-right black lt">
+                          <ul> 
+                            <li> <a  data-toggle="modal" data-target="#editshopdesiginimg">Edit</a></li>
+                            <li> <a href="/images/destroy_designimg/<%=d.id%>" onclick="return confirm('정말 선택한 도안을 삭제하실건가요?')"  >Delete</a></li>
+                          </ul>
+                        </div>
+                        <% else %>
+                        
+                        <% end %>
+                      </div>
+                      <div class="item-title text-ellipsis">
+                        <a href="#"><%=d.title%></a>
+                      </div>
+                      <div class=item-action visible-list m-t-sm>
+                       타투이스트 : <%=d.designer%>
+                      </div>
+                      <div class="item-meta text-sm text-muted">
+                        <span class="item-meta-category"><a href="browse.html" class="label">예상소요시간</a></span>
+                        <span class="item-meta-date text-xs"><%=d.timespan%> 시간</span>
+                      </div>
+                    
+                      <div class="item-except visible-list text-sm text-muted h-1x m-t-sm">
+                      작품 설명 : <%=d.description%>
+                      </div>
+                    
+                      <div class="item-action visible-list m-t-sm">
+                      가격: <%=d.price%>원
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              <% end %>    
+            </div>
+          </div>
+          <!--후기 -->
+          <div class="tab-pane" id="review">
+            <h5 class="m-t-lg m-b">Leave a comment</h5>
+            <div class="form-group">
+              <%= form_tag({controller: "review", action: "write_review"}, method: "post", remote: true) do %>
+                  <%= text_area_tag :content, "", :rows => 5, style: 'width: 100%;', class: "form-control no border", placeholder: "type your comment"  %>
+                  <%= hidden_field_tag(:tattooshop_id, "#{@one_shop.id}") %>
+                  <%= submit_tag "Submit comment", class: "btn-sm pull-right white rounded"  %>
+              <% end %>
+            </div>
+              
+              <br>
+              <hr>
+              <h5 class="m-b">Comments</h5>
+                <div class="streamline m-b m-l">
+                  <% @one_shop.reviews.each do |r| %>
+                    <div class="sl-item">
+                      <div class="sl-left">
+                      </div>
+                      <div class="sl-content">
+                        <div class="sl-author m-b-0">
+                          <a href="#" style="font-weight:bold"><%= r.user.nick_name %></a>
+                          <span class="sl-date text-muted"> <%=r.created_at %></span>
+                        </div>
+                        <div>
+                          <p><%= r.content %></p>
+                        </div>
+                        <div class="sl-footer">
+                          <% if r.user_id == current_user.id %>
+                            <% if current_user.is_likereview?(r) %>
+                                <a href="/like/likereview/<%=r.id%>" class="btn-favorite"><i class="fa fa-thumbs-up" aria-hidden="true"></i></a>
+                            <% else %>
+                                <a href="/like/likereview/<%=r.id%>" class="btn-favorite"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i></a>
+                            <% end %>
+                            <a href="/review/destroy/<%=r.id%>" class="btn-sm pull-right">Delete</a>
+
+                          <% else %>
+                            <% if current_user.is_likereview?(r) %>
+                              <a href="/like/likereview/<%=r.id%>" class="btn-favorite"><i class="fa fa-thumbs-up" aria-hidden="true"></i></a>
+                            <% else %>
+                              <a href="/like/likereview/<%=r.id%>" class="btn-favorite"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i></a>
+                            <% end %>
+                          <% end %>
+                          <%=r.reviewlikes.size%> <br>
+                          <a href="#" data-toggle="collapse" data-target="#reply-<%=r.id%>">
+                            <i class="fa fa-fw fa-mail-reply text-muted"></i> Reply
+                          </a>
+                        </div>
+                        <div class="box collapse m-a-0 b-a" id="reply-<%=r.id%>">
+                          <%= form_tag({controller: "review", action: "write_rereview"}, method: "post") do %>
+                            <%= text_area_tag :content, "", :rows => 3, style: 'width: 100%;', class: "form-control no border", placeholder: "Type something..."  %>
+                            <%= hidden_field_tag(:review_id, "#{r.id}") %>
+                            <%= hidden_field_tag(:user_id, "#{current_user.id}") %>
+                            <%= submit_tag "reply", class: "btn btn-info pull-right btn-sm"  %>
+                          <% end %>
+                        </div>
+                        <% r.rereviews.each do |rr| %>
+                        <div class="sl-item">
+                          <div class="sl-left">
+                          </div>
+                          <div class="sl-content">
+                            <div class="sl-author m-b-0">
+                              <a href="#" style="font-weight:bold"><%= rr.user.nick_name %></a>
+                              <span class="sl-date text-muted"> <%=rr.created_at %></span>
+                            </div>
+                            <p><%=rr.content%></p>
+                          </div>
+                        </div>
+                        <% end %>
+                      </div>
+                    </div>
+                    <hr/>
+                  <% end %>
+                </div>
+                           <%= paginate @reviews, remote: true %> 
+          </div>
+          <div class="tab-pane" id="shop_tattooist">
+            <div class="row m-b">
+              <h3>SHOP</h3>
+              <div class="owl-carousel owl-theme owl-dots-center" data-ui-jp="owlCarousel" data-ui-options="{
+          margin: 20,
+          responsiveClass:true,
+          responsive:{
+            0:{
+              items: 2
+            },
+              543:{
+                  items: 3
+              }
+          }
+        }"> 
+                
+              	<% @one_shop.shopshopimgs.each do |s| %>
+                  <div class="">
+                    <div class="item r" data-id="item-8" data-src="http://api.soundcloud.com/tracks/236288744/stream?client_id=a10d44d431ad52868f1bce6d36f5234c">
+                			<div class="item-media item-media-4by3">
+                				<a class="item-media-content" data-toggle="modal" data-target="#oneshop<%=s.id%>" style="background-image: url('<%= asset_path s.image.url%>');"></a>
+                			    <% if @ts.include?(current_user)%>
+
+                          <div class="item-overlay bottom text-right">
+                  					<a href="#" class="btn-more" data-toggle="dropdown"><i class="fa fa-ellipsis-h"></i></a>
+                  					
+                              <div class="dropdown-menu pull-right black lt">
+                                <ul> 
+                                  <li> <a  data-toggle="modal" data-target="#editshopshopimg">Edit</a></li>
+                                  <li> <a href="/images/destroy_shopshopimg/<%=s.id%>" onclick="return confirm('정말 선택한 샵 내부사진을 삭제하실건가요?')"  >Delete</a></li>
+                                </ul>
+                              </div>
+                              <% else %>
+                              
+                              <% end %>
+                          </div>
+                    	</div>
+                		</div>
+                	</div>
+                <% end %>
+              </div>
+              <hr>
+              <h3>TATTOOIST</h3>
+              <div class="padding b-b">
+                <div class="row-col">
+                  <% @ts.each do |ts|%>
+                    <div class="col-sm-3 w  w-auto-xs m-b">
+                      <div class="item w  rounded" >
+                        <div class="item-overlay black-overlay rounded w-full">
+              			    	<!--<div class="item-media-content" style="background-image: url('<%#= asset_path ts.image.url%>');"></div>-->
+              			    	<div class="center text-md" data-toggle="modal" data-target="#tattooist<%=ts.id%>"></div>
+              			    </div>
+                        <div class="item-media shop-tattooist">
+                				  <a class="item-media-content" data-toggle="modal" data-target="#tattooist<%=ts.id%>" style="background-image: url('<%= asset_path ts.image.url%>');"></a>
+                			  	<a class="center text-md" data-toggle="modal" data-target="#tattooist<%=ts.id%>">
+                				  <span style="font-weight:bold;color:white;"><%=ts.nick_name %></span> 
+                				  </a>
+                          <!--<a href="#" class="center text-md" data-toggle="modal" data-target="#tattooist<%#=ts.id%>"><h3><%#=ts.name%></h3></i></a>-->
+                        </div>
+                      </div>
+                    </div>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="tab-pane" id="tattoos">
+            <div class="row m-b">
+              <%@one_shop.shoptattooimgs.each do |t| %>
+              <div class="col-xs-4 col-sm-4 col-md-3">
+                  	<div class="item r" data-id="item-7" data-src="http://api.soundcloud.com/tracks/245566366/stream?client_id=a10d44d431ad52868f1bce6d36f5234c">
+              			<div class="item-media ">
+              				<a class="item-media-content" data-toggle="modal" data-target="#onetattoo<%=t.id%>" style="background-image: url('<%= asset_path t.image.url%>');"></a>
+              			</div>
+              			<div class="item-info">
+              				<div class="item-overlay bottom text-right">
+              					<a href="#" class="btn-more" data-toggle="dropdown"><i class="fa fa-ellipsis-h"></i></a>
+              					<div class="dropdown-menu pull-right black lt">
+              					  <ul> 
+                            <li> <a  data-toggle="modal" data-target="#editshoptattooimg">Edit</a></li>
+                            <li> <a href="/images/destroy_tattooimg/<%=t.id%>" onclick="return confirm('정말 선택한 작품을 삭제하실건가요?')"  >Delete</a></li>
+                          </ul>
+              					</div>
+              				</div>
+              				
+                			<div class="float-right">
+                  			<div class="item-title text-ellipsis">
+                  				<a href="#"><%= t.title %></a><!--제목-->
+                  			</div>
+                  			 <div class="item-designer text-m text-ellipsis">
+                  			  <a href="artist.detail.html" class="text-muted" ><%= t.designer %></a>
+                  			  
+                  			  <span class="item-meta-stats text-s pull-right">
+                            <% if current_user.is_likeshoptattoo?(t) %>
+                              <a href="/like/likeshoptattoo/<%=t.id%>" class="btn-favorite"><i class="fa fa-thumbs-up" aria-hidden="true"></i></a>
+                            <% else %>
+                              <a href="/like/likeshoptattoo/<%=t.id%>" class="btn-favorite"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i></a>
+                            <% end %>
+                            <%=t.shoptattoolikes.size%>
+                            
+                            <a href="#">댓글 <%= t.shoptattoocomments.count %> </a> 
+                		      </span>
+                  			</div>
+                			</div>
+              			</div>
+              		</div>
+              	</div>
+              <%end %>
+            </div>
+          </div>
+          <div class="tab-pane" id="reservation">
+            <div class="row m-b">
+              <div id='calendar'></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--사이드바-->
+    <div class="col-lg-3 w-xxl w-auto-md">
+      <div class="padding" style="bottom: 60px;" data-ui-jp="stick_in_parent">
+        <h4>예약하기</h4>
+        <div class="row item-list item-list-sm m-b">
+          <form>
+            <div class="field">
+              <h5>상품선택 (도안별)</h5>
+              <div class="reserve">
+                <select name="job" class="form-control">
+                    <option value="">선택안함</option>                  
+                  <%@one_shop.shopdesignimgs.each do |d|%>
+                    <option value="<%=d.title%>"><%=d.title%></option>
+                  <%end%>
+                </select>
+              </div>
+              <h5>상품선택 (시간별)</h5>
+              <div class="reserve"> 
+                <select name="job" class="form-control">
+                  <option value="">선택안함</option>
+                  <%@ts.each do |d|%>
+                    <option value="<%=d.nick_name%>"><%=d.nick_name%></option>
+                  <%end%>
+                </select><br>
+                <!--<p>Date: <input type="text" id="datepicker"></p>-->
+                Date: <div id="datepicker"></div>
+                
+
+              </div>
+                <a href="#" class="btn btn-lg rounded white" align="center"> 예약요청하기 </a>
+            </div>
+          </form>
+      	</div>
+        <div class="nav text-sm _600">
+        	<a href="#" class="nav-link text-muted m-r-xs">About</a>
+        	<a href="#" class="nav-link text-muted m-r-xs">Contact</a>
+        	<a href="#" class="nav-link text-muted m-r-xs">Legal</a>
+        	<a href="#" class="nav-link text-muted m-r-xs">Policy</a>
+        </div>
+        <p class="text-muted text-xs p-b-lg">&copy; Copyright 2017</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--작품보기 모달 -->
+<%@one_shop.shoptattooimgs.each do |t| %>
+
+<div id="onetattoo<%=t.id%>" class="modal" data-backdrop="true" style="margin-top:60px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+      	<h5 class="modal-title">작품 크게 보기</h5>
+      </div>
+      <div class="modal-body text-center p-lg">
+        <div class="row">
+          <div class="col-sm-6"><%= image_tag t.image.url, class:"tattoo_large"%></div>
+          <div class="col-sm-6">
+            <header>
+              <div class="item-title text-ellipsis">
+                <h5><%= t.title %></h5> <br>    
+              </div>
+              <div class="right-align" align="right">
+                <a href="#" style="font-weight:bold;margin-right: 15px"><%= t.designer %></a> <br/><br><hr>
+              </div>
+          	</header>		
+              <div align="left">
+              <%= t.description.html_safe %><hr>
+              </div>
+              <% if current_user.is_likeshoptattoo?(t) %>
+                  <div align="left">
+                     <p align="left"> <a href="/like/likeshoptattoo/<%=t.id%>" class="btn-favorite"><i class="fa fa-thumbs-up" aria-hidden="true"></i></a> 이미 좋아요를 누르셨습니다.</p>  
+                  </div>
+                <% else %>
+                  <div align="left">
+                     <p align="left"> <a href="/like/likeshoptattoo/<%=t.id%>" class="btn-favorite"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i></a> 작품이 마음에 드셨나요? 좋아요를 눌러주세요!</p>
+                  </div>
+                <% end %>
+                <%= form_tag({controller: "review", action: "write_shoptattoocomment"}, method: "post") do %>
+                    <div class="form-group">
+                      <%#= label_tag(:content, "comment") %>
+                      <%= text_field_tag :content, "", :rows => 1, style: 'width: 100%;', class: "form-control no border", placeholder: "type your comment"  %>
+                    </div>
+                      <%= hidden_field_tag(:shoptattooimg_id, "#{t.id}") %>
+                      <%= hidden_field_tag(:user_id, "#{current_user.id}") %>
+                    <!--<div class="form-group">      -->
+                    <!--  <%#= submit_tag "Comment", class: "btn btn-info-col-2" %>-->
+                    <!--</div>-->
+                  <% end %>
+                <% t.shoptattoocomments.each do |c| %>
+                  <p align="left"> <a href="#" style="font-weight:bold"><%= c.user.nick_name %></a>  <%= c.content %> </p>
+                <% end %>
+                <!--<#%= paginate @shoptattoocomments, remote: true %>-->
+              </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">나가기</button>
+        <!--<button type="button" class="btn danger p-x-md" data-dismiss="modal">나가기</button>-->
+      </div>
+    </div><!-- /.modal-content -->
+  </div>
+</div>
+<%end%>
+<script>
+  
+</script>
+<!--도안보기 모달-->
+<%@one_shop.shopdesignimgs.each do |d| %>
+
+<div id="onedesign<%=d.id%>" class="modal" data-backdrop="true" style="margin-top:60px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+      <h5 class="modal-title">도안 크게 보기</h5>
+      </div>
+      <div class="modal-body text-center p-lg">
+        <div class="row">
+            <div class="col-sm-6"><%= image_tag d.image.url, class:"tattoo_large"%></div>
+            <div class="col-sm-6">
+              <header>
+                <div class="item-title text-ellipsis">
+                    <h5><%=d.title%></h5><br>
+                </div>
+                <div class="right-align" align="right">
+                  <a href="#" style="font-weight:bold;margin-right: 15px"><%= d.designer %></a> <br/><br>
+                </div>
+                <div align="left">
+                  <span class="item-meta-category text-xl"><a href="browse.html" class="label">예상소요시간</a></span>
+                  <span class="item-meta-date text-m"> <%= d.timespan %>시간</span><br>
+                  <span class="item-meta-date text-m">가격 : <%= d.price %>원 </span>
+                </div>
+              </header> <hr> 
+              <div align="left"><%= d.description.html_safe %></div> <hr>
+            
+                <% if current_user.is_likedesign?(d) %>
+                <div align="left">
+                <p align="left"> <a href="/like/likedesign/<%=d.id%>" class="btn-favorite"><i class="fa fa-heart" aria-hidden="true"></i></a> 이미 위시리스트에 담으셨습니다</p>  
+                </div>
+                <% else %>
+                <div align="left">
+                  <p align="left"> <a href="/like/likedesign/<%=d.id%>" class="btn-favorite"><i class="fa fa-heart-o" aria-hidden="true"></i></a> 도안이 마음에 드시면 위시리스트에 추가해보세요</p>
+                </div>
+                <% end %>
+    
+                  <%= form_tag({controller: "review", action: "write_shopdesigncomment"}, method: "post") do %>
+                    <div class="form-group">
+                    <%#= label_tag(:content, "comment") %>
+                    <%= text_field_tag :content, "", :rows => 1, style: 'width: 100%;', class: "form-control no border", placeholder: "type your comment"  %>
+                    </div>
+                    <%= hidden_field_tag(:shopdesignimg_id, "#{d.id}") %>
+                    <%= hidden_field_tag(:user_id, "#{current_user.id}") %>
+                  <% end %>    
+                <% d.shopdesigncomments.each do |c| %>
+                <p align="left"> <a href="#" style="font-weight:bold"><%= c.user.nick_name %></a>  <%= c.content %> </p> 
+                <% end %> 
+    
+                
+            </div>
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">나가기</button>
+        <!--<button type="button" class="btn danger p-x-md" data-dismiss="modal">나가기</button>-->
+        </div>
+      </div>  
+    </div><!-- /.modal-content -->
+  </div>
+</div>
+<%end%>
+
+<!--샵내부환경보기 모달-->
+<%@one_shop.shopshopimgs.each do |s| %>
+
+<div id="oneshop<%=s.id%>" class="modal" data-backdrop="true" style="margin-top:60px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+      	<h5 class="modal-title">샵 내부 크게 보기</h5>
+      </div>
+      <div class="modal-body text-center p-lg">
+        <div class="row">
+          <div class="col-sm-12"><h5 style="text-align: left;"><%=s.title %></h5> <hr> <%= image_tag s.image.url, class:"tattoo_large"%></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">나가기</button>
+        <!--<button type="button" class="btn danger p-x-md" data-dismiss="modal">나가기</button>-->
+      </div>
+    </div><!-- /.modal-content -->
+  </div>
+</div>
+<%end%>
+<%@ts.each do |t| %>
+
+<div id="tattooist<%=t.id%>" class="modal" data-backdrop="true" style="margin-top:60px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="">
+          <div class="row-col">
+            <div class="profile-img col-xs-3">
+              <div class="item  rounded">
+                <div class="item-media">
+                  <div class="item-media-content" style="background-image: url('<%= asset_path t.image.url%>');"></div>
+                </div>
+              </div>
+            </div>
+            <div class="col-xs">
+              <div class="p-l-md no-padding-xs">
+                <div>
+                <h5 class="page-title">
+                  <span class="h1 _800"><%=t.nick_name%></span> 
+                </h5>
+                
+                </div>
+                
+                <p class="pull-right"><%=t.follow_count%>명의 사용자가 타투이스트를 팔로우하고 있습니다.</p><br>
+                <% if current_user.following?(t) %>
+                      <a href="/member/unfollow/<%=t.id%>" class="btn-favorite follow-btn pull-right" style="vertical-align: top;"><i class="fa fa-heart  text-danger none" aria-hidden="true"></i>타투이스트 팔로우 취소</a>
+                    <% else %>
+                      <a href="/member/follow/<%=t.id%>" class="btn-favorite follow-btn pull-right" style="vertical-align: top;"><i class="fa fa-heart-o  text-danger none" aria-hidden="true"></i>타투이스트 팔로우하기</a>
+                    <% end %>
+                    
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-body p-lg">
+        <div class="row">
+          <div class="co-sm-6">
+            <h6>나이 :  
+              <% if Time.current.month - t.birthday.month > 0 %>
+                <%=Time.current.year-t.birthday.year%>
+              <% elsif Time.current.month == t.birthday.month and Time.current.day >= t.birthday.day %>
+                <%=Time.current.year-t.birthday.year%>
+              <% else %>
+                <%=Time.current.year-t.birthday.year-1%>
+              <% end %>
+            </h6>
+            <h6>성별 :<%=t.gender%></h6>
+            <h6>소속 타투샵 : <%=t.belong%></h6>
+            <h6>타투 특기 분야 : <%=t.specialty%></h6>
+            <h6>시간제 가격 : <%=t.hourlyprice%> 원</h6> <hr>
+            <h6>인사말</h6><p>  <%=t.introduction%></p> <hr>
+          </div>
+          <div class="co-sm-6">
+            <h6>경력</h6> <p>  <%=t.career%></p><hr>
+            <h6>수상내역</h6><p>  <%=t.prizes%></p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">나가기</button>
+        <!--<button type="button" class="btn danger p-x-md" data-dismiss="modal">나가기</button>-->
+      </div>
+    </div>                      
+  </div><!-- /.modal-content -->
+</div>
+<%end%>
+
+<!--도안 수정 모달-->
+<% @one_shop.shopdesignimgs.each do |s|%>
+<div id="editshopdesiginimg" class="modal" data-backdrop="true">
+  <div class="row-col h-v">
+    <div class="row-cell v-m">
+      <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+          <div class="modal-header">
+          	<span class="modal-title">도안 사진 및 정보 변경</span>
+          </div>
+          <div class="modal-body  p-lg">
+            <div class="p-a-md sign_in_nav" >
+                 <%= form_tag({controller: "images", action: "update_designimg"}, method: "post", multipart: true) do %>
+                  <%= label_tag(:image, "도안사진을 다시 올려주세요") %>
+                  <%= file_field_tag(:image) %><br>
+                  <%= label_tag(:title, "도안 제목") %>
+                  <%= text_field_tag :title,"", class:"form-control", value: s.title %> <br />
+                  <%= label_tag(:designer,"타투이스트")%>
+                  <%= select_tag(:designer, options_for_select(@shop_tattooist)) %> <br />
+                  <%= label_tag(:timespan, "도안 예상소요시간") %>
+                  <%= text_field_tag :timespan,"", class:"form-control", value: s.timespan %> <br />
+                  <%= label_tag(:description, "도안 설명") %>
+                  <%= text_field_tag :description,"", class:"form-control", value: s.description %> <br />
+                  <%= label_tag(:price, "도안 가격") %>
+                  <%= text_field_tag :price, "", class:"form-control", value: s.price %> <br />
+                  <%= hidden_field_tag(:tattooshop_id, "#{@one_shop.id}") %>
+                  <%= hidden_field_tag(:asd, "#{s.id}") %>
+                  <div class="modal-footer">
+                    <button type="button" class="btn dark-white p-x-md pull-left" data-dismiss="modal">나가기</button>
+                    <%= submit_tag "수정완료", class: "btn dark-white p-x-md" %>
+                  </div>
+                    <% end %>
+            </div>
+          </div>                      
+        </div><!-- /.modal-content--> 
+      </div>
+    </div>
+  </div>
+</div>
+<%end%>
+
+<!--샵내부환경 수정 모달-->
+<% @one_shop.shopshopimgs.each do |s|%>
+    <div id="editshopshopimg" class="modal" data-backdrop="true">
+      <div class="row-col h-v">
+        <div class="row-cell v-m">
+          <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+              <div class="modal-header">
+              	<span class="modal-title">매장 사진 업로드 수정</span>
+              </div>
+              <div class="modal-body  p-lg">
+                <div class="p-a-md sign_in_nav" >
+                    <%= form_tag({controller: "images", action: "update_shopshopimg"}, method: "post", multipart: true) do %>
+                      <%= label_tag(:image, "매장사진") %>
+                      <%= file_field_tag(:image) %> <br />
+                      <%= label_tag(:title, "사진 제목") %>
+                      <%= text_field_tag(:title) %> <br />
+                      <%= hidden_field_tag(:tattooshop_id, "#{@one_shop.id}") %>
+                      <%= hidden_field_tag(:ssi, "#{s.id}") %>
+                      <div class="modal-footer">
+                        <button type="button" class="btn dark-white p-x-md pull-left" data-dismiss="modal">나가기</button>
+                        <%= submit_tag "수정완료", class: "btn dark-white p-x-md" %>
+                      </div>
+                        <% end %>                      
+                </div>
+              </div>                      
+            </div><!-- /.modal-content -->
+          </div>
+        </div>
+      </div>
+    </div>
+<% end %> 
+
+<!-- 작품 모달 수정 -->
+<% @one_shop.shoptattooimgs.each do |t|%>
+    <div id="editshoptattooimg" class="modal" data-backdrop="true">
+      <div class="row-col h-v">
+        <div class="row-cell v-m">
+          <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+              <div class="modal-header">
+              	<span class="modal-title">작품 사진 업로드</span>
+              </div>
+              <div class="modal-body  p-lg">
+                <div class="p-a-md sign_in_nav" >
+                    <%= form_tag({controller: "images", action: "update_tattooimg"}, method: "post", multipart: true) do %>
+                      <%= label_tag(:image, "작품사진") %>
+                      <%= file_field_tag(:image) %>
+                      <%= label_tag(:title, "작품 제목") %>
+                      <%= text_field_tag(:title,"", class:"form-control", value: t.title) %> <br />
+                      <%= label_tag(:designer,"타투이스트")%>
+                      <%= select_tag(:designer, options_for_select(@shop_tattooist)) %> <br />
+                      <%= label_tag(:description, "작품 설명") %>
+                      <%= text_field_tag(:description,"", class:"form-control", value: t.description) %> <br />
+                      <%= hidden_field_tag(:tattooshop_id, "#{@one_shop.id}") %>
+                      <%= hidden_field_tag(:sti, "#{t.id}") %>                      
+                      <div class="modal-footer">
+                        <button type="button" class="btn dark-white p-x-md pull-left" data-dismiss="modal">나가기</button>
+                        <%= submit_tag "수정완료", class: "btn dark-white p-x-md" %>
+                      </div>
+                        <% end %>
+                </div>
+              </div>                      
+            </div><!-- /.modal-content -->
+          </div>
+        </div>
+      </div>
+    </div>
+<% end %>

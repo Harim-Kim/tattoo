@@ -1,0 +1,85 @@
+
+<div class="center-block w-xxl w-auto-xs p-y-md text-center" style="margin-top:20px">
+  <div class="p-a-md" >
+    <h1 >Sign up</h1><br>
+    
+    <%= form_for(resource, as: resource_name, url: registration_path(resource_name), multipart: true) do |f| %>
+      <%= devise_error_messages! %>
+    
+      <div class="field">
+        <h5 style="float:left;">Email</h5>
+        <%= f.email_field :email, autofocus: true, class: "form-control", placeholder: "email" %>
+      </div>
+    
+      <div class="field form-group" style="margin-top:10px;">
+        <h5 style="float:left;">Password</h5>
+        <% if @minimum_password_length %>
+        <em>(<%= @minimum_password_length %> characters minimum)</em>
+        <% end %><br />
+        <%= f.password_field :password, autocomplete: "off", class: "form-control", placeholder: "password" %>
+      </div>
+    
+      <div class="field form-group">
+        <h5 style="float:left;">Password confirmation</h5>
+        <%= f.password_field :password_confirmation, autocomplete: "off", class: "form-control", placeholder: "password" %>
+      </div>
+      
+      <div class="field form-group">
+        <h5 style="float:left;">Name</h5>
+        <%= f.text_field :name , class: "form-control", placeholder: "Name" %>
+      </div>
+      <div class="field form-group">
+        <h5 style="float:left;">Nick Name</h5>
+        <%= f.text_field :nick_name , class: "form-control", placeholder: "Nick name" %>
+      </div>
+      <div class="field form-group">
+        <h5 style="float:left;">Profile Image</h5>
+        <%= f.file_field :image , class: "form-control" %>
+      </div>
+      <div class="field form-group">
+        <h5 style="float:left;">Birthday</h5>
+        <%= f.date_field :birthday , class: "form-control", placeholder: "birthday" %>
+      </div>
+      <div class="field form-group">
+        <h5 style="float:left;">Phone Number</h5>
+        <%= f.telephone_field :phonenumber , class: "form-control", placeholder: "Phone Number" %>
+      </div>
+      
+      <div class="field form-group">
+        <h5 style="float:left;">Gender</h5>
+          <%= f.radio_button :gender, 'male', :checked => true %> 
+          <%= label :gender_male, 'Male' %>
+          <%= f.radio_button :gender, 'female' %>
+          <%= label :gender_female, 'Female' %>
+      </div>
+      <div class="field">
+        <h5 style="float:left;">Country</h5>
+        <%= f.text_field :country, class: "form-control" , placeholder: "Country" %>
+      </div>
+      <div class="field">
+        <h5 style="float:left;">City</h5>
+        <%= f.text_field :city, class: "form-control" , placeholder: "City"%>
+      </div>
+      <div class="field">
+        <h5 style="float:left;">Are you tattooist?</h5>
+        <%= f.check_box :is_tattooist, class: "form-control"%>
+      </div>
+      
+      <div class="actions form-group">
+        <%= f.submit "Sign up" , class:"btn btn-outline rounded b-primary text-primary"%>
+      </div>
+      
+    <% end %>
+    <div style="margin-top:10px;">
+      <div>Already have an account? <a href="/users/sign_in" class="text-primary _600">Sign in</a></div>
+    </div> <!--<div class="m-y text-sm">-->
+    <!--  OR-->
+    <!--</div>-->
+    <!--<div>-->
+    <!--  <a href="#" class="btn btn-block indigo text-white m-b-sm">-->
+    <!--    <i class="fa fa-facebook pull-left"></i>-->
+    <!--    Sign up with Facebook-->
+    <!--  </a>-->
+    <!--</div>-->
+  </div>
+</div>

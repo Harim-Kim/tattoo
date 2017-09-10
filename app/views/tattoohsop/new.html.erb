@@ -1,0 +1,46 @@
+
+<div class="center-block w-xxl w-auto-xs p-y-md text-center" style="margin-top:20px">
+  <div class="p-a-md" >
+    <!--<#% if current_user.tattooshops.exists? %>-->
+    <!--    <h1 >You already Have your own tattooshop!</h1><br><br>-->
+    <!--    <h2><a href="/">Go back</a></h2>-->
+    <!--<%#else %>-->
+
+        <h1 >New Tattooshop</h1><br>
+    
+    <%= form_tag({controller: "tattooshops", action: "create"}, method: "post", multipart: true) do %>
+        <%=text_field_tag :user_id,"", type:"hidden", value:current_user.id %>
+        <%=text_field_tag :owner,"", type:"hidden", value:current_user.email %>
+        <div class="field">
+            <h5 style="float:left">Shop name</h5>
+            <%= text_field_tag :shopname,"", class:"form-control"%>
+        </div>
+        <div class="field">
+            <h5 style="float:left">Phone Number</h5>
+            <%= text_field_tag :phonenumber,"", class:"form-control"%>
+        </div>
+        <div class="field">
+            <h5 style="float:left">Country</h5>
+            <%=text_field_tag :country,"", class:"form-control"%>
+        </div>
+        <div class="field">
+            <h5 style="float:left">City</h5>
+            <%= text_field_tag :city,"", class:"form-control"%>
+        </div>
+        <div class="field">
+            <h5 style="float:left">Suburb</h5>
+            <%= text_field_tag :suburb,"", class:"form-control"%>
+        </div>
+        <div class="field">
+            <h5 style="float:left">Street Address</h5>
+            <%= text_field_tag :address,"", class:"form-control"%>
+        </div><hr>
+        <p> 자세한 내용은 타투샵페이지에서 꾸며주세요</p>
+        <div class="actions form-group">
+            <%=submit_tag "Create" , class:"btn btn-outline rounded  text-primary"%>
+        </div>
+    <% end %>
+
+    <!--<#%end%>-->
+  </div>
+</div>
