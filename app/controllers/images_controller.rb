@@ -1,4 +1,9 @@
 class ImagesController < ApplicationController
+  $gallery_item =Array.new
+
+  def gallery
+  	@gallery_items = $gallery_item
+  end
   def profile
     profile = Tattooshop.find(params[:tattooshop_id])
     profile.update(profile_img:params[:image])
@@ -18,16 +23,19 @@ class ImagesController < ApplicationController
   end
 
   def tattoo_image
-    Shoptattooimg.create(image: params[:image],
+    t=Shoptattooimg.create(image: params[:image],
                          tattooshop_id: params[:tattooshop_id],
                          title: params[:title],
                          description: params[:description],
                          designer: params[:designer])
+    if params[:gallery]
+    		$gallery_item.push(t)
+    end
     redirect_to :back
   end
   
   def design_image
-    Shopdesignimg.create(image: params[:image],
+    d=Shopdesignimg.create(image: params[:image],
                         tattooshop_id: params[:tattooshop_id],
                         title: params[:title],
                         description: params[:description],
@@ -35,6 +43,9 @@ class ImagesController < ApplicationController
                         timespan: params[:timespan],
                         designer: params[:designer])
     redirect_to :back
+    if params[:gallery]
+    		$gallery_item.push(d)
+    end
   end
   
   def greeting
@@ -126,6 +137,10 @@ class ImagesController < ApplicationController
       t.save
       
       redirect_to :back
+  end
+  private
+  def set_gallery
+  	@gallery_item = Array.new
   end
 
 end

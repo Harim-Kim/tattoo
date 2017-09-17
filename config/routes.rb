@@ -15,6 +15,8 @@ Rails.application.routes.draw do
   post 'images/update_shopshopimg' => 'images#update_shopshopimg'
   post 'images/update_tattooimg' => 'images#update_tattooimg'
   get 'home/search'
+  #pages
+  get 'images/gallery' 
   #리뷰 관련
   post 'review/write_review'
   get 'review/edit/:review_id' => 'review#edit'

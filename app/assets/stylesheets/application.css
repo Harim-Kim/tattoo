@@ -38,7 +38,17 @@
 .tapeo{
     background-color:#fcc100;
 }
-
+.second-nav{
+    padding-left:20px;
+    padding-bottom: 5px;
+}
+.second-nav>span,a{
+    font-family: "Poppins", "Trebuchet MS", "PT Sans", "Helvetica Neue", "HelveticaNeue-Light", Helvetica, Arial, sans-serif;
+    font-weight: 600;
+    line-height: 1;
+    vertical-align: middle;
+    display: inline-block;
+}
 #sticky {
     padding: 0.5ex;
     color: #fff;
@@ -52,9 +62,9 @@
     z-index: 10000;
 }
 .app-body{
-    padding-left:15px;
-    padding-right: 15px;
-    margin-top:60px;
+    /*padding-left:15px;
+    padding-right: 15px;*/
+    margin-top:56px;
 }
 .sign_in_nav_box{
     width:250px;

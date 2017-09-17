@@ -1,0 +1,93 @@
+<div id="content" class="app-content" role="main">
+    <div class="app-body">
+     	<div class="black second-nav">
+     		<a href="/home/index">Tattooshop</a>
+     		<a href="/images/gallery">Gallery</a>
+     		<a href="#">Magazine</a>
+     		<a href="#">Store</a>
+     		
+     		<a href="#" class="pull-right" data-toggle="modal" data-target="#main" style="margin-right:30px">UPLOAD</a>
+		</div>
+		<div class="row-col">
+			<div class="col-lg-9 b-r no-border-md">
+				<div class="padding p-y-0 m-b-md">
+					<div class="nav-active-border b-primary bottom m-b-md m-t">
+						<ul class="nav l-h-2x" data-ui-jp="taburl">
+							<li class="nav-item m-r inline">
+								<a class="nav-link active" href="#" data-toggle="tab" data-target="#all">ALL</a>
+							</li>
+							<li class="nav-item m-r inline">
+								<a class="nav-link" href="#" data-toggle="tab" data-target="#tattooist">Tattooist</a>
+							</li>
+							<li class="nav-item m-r inline">
+								<a class="nav-link" href="#" data-toggle="tab" data-target="#tp">Tattoo People</a>
+							</li>
+						</ul>
+					</div>
+					<div class="tab-content">
+						<div class="tab-pane active" id="all">
+							<%@gallery_items.each do |g|%>
+								<div class="col-xs-4 col-sm-4 col-md-2">
+									<div class="item r" data-id="item-9">
+										<div class="item-media ">
+											<a href="#" class="item-media-content" style="background-image: url('<%=asset_path g.image.url%>');"></a>
+										</div>
+										<div class="item-info">
+											<div class="item-overlay bottom text-right">
+												<a href="#" class="btn-favorite"><i class="fa fa-heart-o"></i></a>
+												<a href="#" class="btn-more" data-toggle="dropdown"><i class="fa fa-ellipsis-h"></i></a>
+												<div class="dropdown-menu pull-right black lt"></div>
+											</div>
+											<div class="item-meta text-sm text-muted pull-right">
+											</div>
+											<div class="item-title text-ellipsis">
+												<a href="track.detail.html"><%=g.tattooshop.shopname%></a>
+											</div>
+
+											<div class="item-author text-sm text-ellipsis">
+												<a href="artist.detail.html" class="text-muted"><%#=s.designer%></a>
+											</div>
+										</div>
+									</div>
+								</div>
+					        <%end%>
+						</div>
+						<div class="tab-pane active" id="tattooist">
+
+						</div>
+						<div class="tab-pane active" id="tp">
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+    </div>
+</div>
+<div id="main" class="modal" data-backdrop="true">
+      <div class="row-col h-v">
+        <div class="row-cell v-m">
+          <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+              <div class="modal-header">
+              	<span class="modal-title">메인 사진 업로드</span>
+              	<!--<a style="text-align:right" type="button"  data-dismiss="modal">x</a>-->
+              </div>
+              <div class="modal-body  p-lg">
+                <div class="p-a-md sign_in_nav" >
+                    <%= form_tag({controller: "images", action: "main_image"}, method: "post", multipart: true) do %>
+                      <%= label_tag(:image, "메인사진") %>
+                      <%= file_field_tag(:image) %>
+                      <%= hidden_field_tag(:tattooshop_id ) %>
+                      <div class="modal-footer">
+                        <button type="button" class="btn dark-white p-x-md pull-left" data-dismiss="modal">나가기</button>
+                        <%= submit_tag "업로드", class: "btn primary p-x-md" %>
+                      </div>
+                    <% end %>  
+                </div>
+              </div>
+            </div><!-- /.modal-content -->
+          </div>
+        </div>
+      </div>
+    </div>

@@ -147,6 +147,8 @@
                       <%= label_tag(:price, "도안 가격") %> <span>(원)</span>
                       <%= text_field_tag(:price) %> <br />
                       <%= hidden_field_tag(:tattooshop_id, "#{@one_shop.id}") %>
+                      <%= label_tag(:gallery,"Upload gallery? check for accept")%>
+                      <%= check_box_tag :gallery%>
                       <div class="modal-footer">
                         <button type="button" class="btn dark-white p-x-md pull-left" data-dismiss="modal">나가기</button>
                         <%= submit_tag "업로드", class: "btn dark-white p-x-md" %>
@@ -207,6 +209,8 @@
                       <%= label_tag(:description, "작품 설명") %>
                       <%= text_field_tag(:description) %> <br />
                       <%= hidden_field_tag(:tattooshop_id, "#{@one_shop.id}") %>
+                      <%= label_tag(:gallery,"Upload gallery? check for accept")%>
+                      <%= check_box_tag :gallery%>
                       <div class="modal-footer">
                         <button type="button" class="btn dark-white p-x-md pull-left" data-dismiss="modal">나가기</button>
                         <%= submit_tag "업로드", class: "btn dark-white p-x-md" %>
@@ -284,7 +288,11 @@
         <div class="col-sm w w-auto-xs m-b">
           <div class="item w rounded">
             <div class="item-media">
-              <div class="item-media-content" style="background-image: url('<%= asset_path @one_shop.profile_img.url%>');"></div>
+            	<%if @one_shop.profile_img.nil?%>
+              <div class="item-media-content" style="background-image: url('');"></div>
+            	<%else%>
+            	<div class="item-media-content" style="background-image: url('<%#= asset_path @one_shop.profile_img.url%>');"></div>
+            	<%end%>
             </div>
           </div>
         </div>
@@ -849,13 +857,16 @@
         <div class="row">
           <div class="co-sm-6">
             <h6>나이 :  
-              <% if Time.current.month - t.birthday.month > 0 %>
-                <%=Time.current.year-t.birthday.year%>
-              <% elsif Time.current.month == t.birthday.month and Time.current.day >= t.birthday.day %>
-                <%=Time.current.year-t.birthday.year%>
-              <% else %>
-                <%=Time.current.year-t.birthday.year-1%>
-              <% end %>
+            <%if t.birthday.nil?%>
+              <%#if Time.current.month - t.birthday.month > 0 %>
+                <%#=Time.current.year-t.birthday.year%>
+              <%# elsif Time.current.month == t.birthday.month and Time.current.day >= t.birthday.day %>
+                <%#+Time.current.year-t.birthday.year%>
+              <%# else %>
+                <%#=Time.current.year-t.birthday.year-1%>
+              <%# end %>
+              <%else%>
+              <%end%>
             </h6>
             <h6>성별 :<%=t.gender%></h6>
             <h6>소속 타투샵 : <%=t.belong%></h6>
